@@ -50,11 +50,13 @@ export default function LoginPage() {
         
         {/* Top Logo */}
         <div className="relative z-10 flex items-center gap-3">
-          <div className="w-12 h-12 bg-white/10 backdrop-blur-md rounded-xl p-2.5 border border-white/20 flex items-center justify-center">
-             <img src="/logo.jpeg" alt="Mazhavil Costumes Logo" className="w-full h-full object-contain" />
+          <div className="w-12 h-12 bg-white/10 backdrop-blur-md rounded-xl border border-white/20 flex items-center justify-center">
+            <span className="text-xl font-serif font-black italic tracking-wider text-amber-200 select-none">
+              ROC
+            </span>
           </div>
-          <span className="text-2xl font-bold tracking-tight text-white uppercase tracking-widest">
-            Mazhavil Dance Costumes
+          <span className="text-xl font-serif font-bold italic tracking-wide text-white">
+            RENTOCOSTUMES
           </span>
         </div>
 
@@ -68,7 +70,7 @@ export default function LoginPage() {
             Manage your <span className="font-semibold text-amber-200">luxury rental</span> collection.
           </h1>
           <p className="text-slate-400 text-lg font-light leading-relaxed">
-            The exclusive administration suite for Mazhavil Costumes. Seamlessly control inventory, process orders, and curate the perfect experience for your clients.
+            The exclusive administration suite for RENTOCOSTUMES. Seamlessly control inventory, process orders, and curate the perfect experience for your clients.
           </p>
         </div>
       </div>
@@ -79,12 +81,14 @@ export default function LoginPage() {
           
           {/* Mobile Header (Only visible on small screens) */}
           <div className="lg:hidden text-center space-y-4 mb-8">
-             <div className="w-16 h-16 mx-auto bg-slate-950 rounded-2xl p-3 shadow-xl">
-               <img src="/logo.jpeg" alt="Mazhavil Costumes" className="w-full h-full object-contain" />
+             <div className="w-16 h-16 mx-auto bg-slate-950 rounded-2xl border border-white/10 flex items-center justify-center shadow-xl">
+               <span className="text-2xl font-serif font-black italic tracking-wider text-amber-200 select-none">
+                 ROC
+               </span>
              </div>
              <div>
-               <h1 className="text-2xl font-bold text-slate-900 tracking-tight uppercase">Mazhavil Costumes</h1>
-               <p className="text-sm text-slate-500 mt-1 uppercase tracking-widest">Admin Portal</p>
+               <h1 className="text-2xl font-serif font-bold italic text-slate-900 tracking-wide">RENTOCOSTUMES</h1>
+               <p className="text-xs text-slate-500 mt-1 uppercase tracking-widest font-mono">Admin Portal</p>
              </div>
           </div>
 
@@ -116,7 +120,7 @@ export default function LoginPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="pl-12 h-14 bg-slate-50/50 border-slate-200 focus:bg-white focus:border-slate-900 focus:ring-1 focus:ring-slate-900 rounded-xl text-base transition-all"
-                  placeholder="admin@mazhavilcostumes.com"
+                  placeholder="admin@rentocostumes.com"
                   required
                   autoComplete="email"
                 />

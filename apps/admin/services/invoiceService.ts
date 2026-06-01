@@ -84,8 +84,8 @@ export class InvoiceService {
     }
     
     const invoiceNumber = invoiceType === 'final'
-      ? `MAZ-${fiscalSuffix}-${sequentialNum}`
-      : `MAZ-${fiscalSuffix}-${sequentialNum}-DEPOSIT`;
+      ? `RENTO-${fiscalSuffix}-${sequentialNum}`
+      : `RENTO-${fiscalSuffix}-${sequentialNum}-DEPOSIT`;
     const invoiceDate = new Date().toLocaleDateString('en-IN');
 
     // Build props for the React PDF component
@@ -230,9 +230,9 @@ export class InvoiceService {
     }));
 
     return {
-      companyName: order.store?.name || 'Mazhavil Dance Costumes',
-      companyAddress: order.store?.address || 'Near QRS, Karamana P.O., Thiruvananthapuram - 695002',
-      companyPhone: order.store?.phone || '9446961765, 9447961765',
+      companyName: order.store?.name || 'RENTOCOSTUMES',
+      companyAddress: order.store?.address || '123 Demo Street, Prem Nagar, Trivandrum, Kerala, 695001',
+      companyPhone: order.store?.phone || '+910000000000',
       companyEmail: order.store?.email,
       companyGstin: order.store?.gstin,
 

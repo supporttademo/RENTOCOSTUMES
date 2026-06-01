@@ -7,7 +7,7 @@
 -- Create the store
 INSERT INTO stores (name, slug, email, phone, address, is_active, subscription_status)
 VALUES (
-  'Mazhavil Costumes',
+  'RENTOCOSTUMES',
   'mazhavil-costumes',
   'mazhavildancecostumes01@gmail.com',        -- ← Update with real email
   '+919447923234',                      -- ← Update with real phone

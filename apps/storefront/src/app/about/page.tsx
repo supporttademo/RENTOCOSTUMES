@@ -13,11 +13,11 @@ export default async function AboutPage() {
       {/* Hero Section */}
       <section className="relative h-[50vh] flex items-center justify-center bg-white border-b border-[var(--border-silk)]">
         <div className="relative text-center px-4 max-w-4xl flex flex-col items-center">
-          <img 
-            src="/logo_mazhavil.svg" 
-            alt="Mazhavil Costumes" 
-            className="h-20 sm:h-24 md:h-28 mb-10 animate-fadeIn"
-          />
+          <div className="w-24 h-24 rounded-3xl bg-rosegold/5 border border-rosegold/20 flex items-center justify-center mb-10 animate-fadeIn shadow-sm">
+            <span className="text-3xl font-serif font-black italic tracking-wide text-rosegold select-none">
+              ROC
+            </span>
+          </div>
           <div className="section-eyebrow mb-4">Our Story</div>
           <h1 className="text-4xl sm:text-6xl font-serif text-heading mb-6 tracking-tight">The Paris Way</h1>
           <p className="text-base sm:text-lg font-light text-body tracking-wide max-w-2xl mx-auto">
@@ -33,7 +33,7 @@ export default async function AboutPage() {
             <div className="space-y-6 flex-1">
               <h2 className="text-3xl font-serif text-heading">A Tradition of <em className="text-rosegold italic">Excellence</em></h2>
               <p className="text-body leading-relaxed">
-                Mazhavil Costumes was born out of a simple vision: to make every bride feel like royalty without the burden of ownership. We curated a collection that speaks to the heritage of Kerala while embracing modern sophistication.
+                RENTOCOSTUMES was born out of a simple vision: to make every bride feel like royalty without the burden of ownership. We curated a collection that speaks to the heritage of Kerala while embracing modern sophistication.
               </p>
               <p className="text-body leading-relaxed">
                 From Temple costumes that honors ancestors to Kundan sets that dazzle under the stage lights, our pieces are more than just ornaments—they are masterpieces of craftsmanship.

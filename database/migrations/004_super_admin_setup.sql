@@ -35,9 +35,9 @@ SELECT
   s.id,
   b.id,
   'eb613e18-572d-4468-b887-44d370bc4887'::UUID,          -- ← Replace with UUID from Step 1
-  'Admin',                          -- ← Replace with real name
-  'mazhavildancecostumes01@gmail.com',                     -- ← Replace with real email (must match Auth user)
-  '+919447923234',                       -- ← Replace with real phone
+  'Super Admin',                          -- ← Replace with real name
+  'supporttademo@gmail.com',                     -- ← Real admin email
+  '+919447923234',                       -- ← Real admin phone
   'super_admin',
   true
 FROM stores s

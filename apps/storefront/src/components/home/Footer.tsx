@@ -9,8 +9,8 @@ interface FooterProps {
 }
 
 export default function Footer({ store }: FooterProps) {
-  const storeName = store?.name || "Mazhavil Costumes";
-  const storeEmail = store?.email || "hello@mazhavilcostumes.com";
+  const storeName = store?.name || "RENTOCOSTUMES";
+  const storeEmail = store?.email || "hello@rentocostumes.com";
   const storePhone = DISPLAY_PHONE;
 
   return (

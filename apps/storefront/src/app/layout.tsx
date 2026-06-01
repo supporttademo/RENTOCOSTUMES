@@ -18,19 +18,19 @@ const dmSans = DM_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Mazhavil Costumes — Premium Costumes Rental",
+  title: "RENTOCOSTUMES — Premium Costumes Rental",
   description:
     "Luxury bridal costumes rental for weddings, receptions, and bridal shoots across Kerala. Premium pieces, sanitized and insured.",
   keywords: [
     "bridal costumes rental",
     "wedding costumes",
     "Kerala costumes rental",
-    "Mazhavil Costumes",
+    "RENTOCOSTUMES",
     "premium costumes",
   ],
   icons: {
-    icon: "/logo_mazhavil.jpeg",
-    apple: "/logo_mazhavil.jpeg",
+    icon: "/logo.svg",
+    apple: "/logo.svg",
   },
 };
 

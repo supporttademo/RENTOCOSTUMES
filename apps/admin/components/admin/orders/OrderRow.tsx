@@ -276,7 +276,7 @@ function OrderRowInner({
                     message = `Hi ${customerName}, thank you for returning your order #${orderIdShort}. We hope you had a great experience!`;
                     break;
                   case OrderStatus.COMPLETED:
-                    message = `Hi ${customerName}, your order #${orderIdShort} has been completed. Thank you for choosing Mazhavil Dance Costumes!`;
+                    message = `Hi ${customerName}, your order #${orderIdShort} has been completed. Thank you for choosing RENTOCOSTUMES!`;
                     break;
                   case OrderStatus.CANCELLED:
                     message = `Hi ${customerName}, your order #${orderIdShort} has been cancelled. Contact us if you need assistance.`;
@@ -285,7 +285,7 @@ function OrderRowInner({
                     message = `Hi ${customerName}, there is an issue with your order #${orderIdShort}. Please contact us immediately.`;
                     break;
                   default:
-                    message = `Hi ${customerName}, this is regarding your order #${orderIdShort} at Mazhavil Dance Costumes.`;
+                    message = `Hi ${customerName}, this is regarding your order #${orderIdShort} at RENTOCOSTUMES.`;
                 }
                 
                 const encodedMessage = encodeURIComponent(message);

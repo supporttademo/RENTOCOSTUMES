@@ -13,12 +13,12 @@ interface PageProps {
 export async function generateMetadata({ params }: PageProps) {
   const { id } = await params;
   const product = await getProductById(id);
-  if (!product) return { title: "Product — Mazhavil Costumes" };
+  if (!product) return { title: "Product — RENTOCOSTUMES" };
   return {
-    title: `${product.name} — Mazhavil Costumes`,
+    title: `${product.name} — RENTOCOSTUMES`,
     description:
       product.description ||
-      `Rent ${product.name} from Mazhavil Costumes. Premium bridal costumes at ₹${product.price_per_day}/day.`,
+      `Rent ${product.name} from RENTOCOSTUMES. Premium bridal costumes at ₹${product.price_per_day}/day.`,
   };
 }
 

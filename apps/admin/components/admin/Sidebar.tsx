@@ -79,12 +79,20 @@ export default function Sidebar() {
   return (
     <aside className="w-72 bg-gradient-to-b from-slate-900 to-slate-800 min-h-screen flex flex-col sticky top-0 h-screen">
       {/* Logo */}
-      <div className="p-6 border-b border-slate-700">
+      <div className="p-6 border-b border-slate-700/50">
         <div className="flex items-center gap-3">
-          <img src="/logo.jpeg" alt="Mazhavil Costumes" className="w-10 h-10 rounded-lg object-contain" />
+          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-slate-800 to-slate-950 flex items-center justify-center border border-slate-700/50 shadow-inner shrink-0">
+            <span className="text-xl font-serif font-black italic tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-amber-400 to-amber-200 select-none">
+              ROC
+            </span>
+          </div>
           <div>
-            <h1 className="text-xl font-bold text-white tracking-tight">Mazhavil Dance Costumes</h1>
-            <p className="text-xs text-slate-400">Admin Dashboard</p>
+            <h1 className="text-base font-serif font-bold italic tracking-[0.05em] text-white leading-none">
+              RENTOCOSTUMES
+            </h1>
+            <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-amber-400/80 mt-1.5 font-mono">
+              Admin Suite
+            </p>
           </div>
         </div>
       </div>

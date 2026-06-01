@@ -8,12 +8,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Mazhavil Dance Costumes Admin",
-  description: "Admin dashboard for Mazhavil Dance Costumes costumes rental system",
-  icons: {
-    icon: "/logo.jpeg",
-    apple: "/logo.jpeg",
-  },
+  title: "RENTOCOSTUMES Admin",
+  description: "Admin dashboard for RENTOCOSTUMES costumes rental system",
 };
 
 import AuthProvider from "@/components/providers/AuthProvider";

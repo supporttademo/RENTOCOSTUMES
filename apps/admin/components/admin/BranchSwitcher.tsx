@@ -1,18 +1,18 @@
-"use client";
+'use client';
 
-import { Building2, ChevronDown, Check, Lock } from "lucide-react";
-import { useAppStore } from "@/stores";
-import { useBranches } from "@/hooks";
-import { usePermissions } from "@/hooks";
-import { useState, useRef, useEffect } from "react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import type { BranchWithStaffCount } from "@/domain/types/branch";
+import { Building2, ChevronDown, Check, Lock } from 'lucide-react';
+import { useAppStore } from '@/stores';
+import { useBranches } from '@/hooks';
+import { usePermissions } from '@/hooks';
+import { useState, useRef, useEffect } from 'react';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import type { BranchWithStaffCount } from '@/domain/types/branch';
 
 export default function BranchSwitcher() {
   const pathname = usePathname();
   const router = useRouter();
   const searchParams = useSearchParams();
-  
+
   const { branches } = useBranches();
   const selectedBranchId = useAppStore((s) => s.selectedBranchId);
   const setSelectedBranchId = useAppStore((s) => s.setSelectedBranchId);
@@ -26,24 +26,31 @@ export default function BranchSwitcher() {
     const handler = (e: MouseEvent) => {
       if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
     };
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
   }, []);
 
-  const canSwitch = can("switch_branches");
+  const canSwitch = can('switch_branches');
 
-  // Auto-select based on user home branch only if nothing is selected yet
+  // Auto-select and self-heal the selected branch ID
   useEffect(() => {
-    if (branches.length === 0 || selectedBranchId !== null) return;
-    
-    // For Staff, we MUST force their branch
-    if (!canSwitch && user?.branch_id) {
-      setSelectedBranchId(user.branch_id);
+    if (branches.length === 0) return;
+
+    const exists = branches.some((b: any) => b.id === selectedBranchId);
+    if (!exists) {
+      // If nothing selected or old invalid branch is stored, auto-select
+      if (user?.branch_id && branches.some((b: any) => b.id === user.branch_id)) {
+        setSelectedBranchId(user.branch_id);
+      } else {
+        const main = branches.find((b: any) => b.is_main);
+        const fallback = main || branches[0];
+        setSelectedBranchId(fallback.id);
+      }
     }
-  }, [branches, selectedBranchId, setSelectedBranchId, canSwitch, user]);
+  }, [branches, selectedBranchId, setSelectedBranchId, user]);
 
   const selected = branches.find((b: BranchWithStaffCount) => b.id === selectedBranchId);
-  const label = selectedBranchId === null ? "All Branches" : (selected?.name || "Select Branch");
+  const label = selectedBranchId === null ? 'All Branches' : selected?.name || 'Select Branch';
 
   const handleBranchChange = (id: string | null) => {
     setSelectedBranchId(id);
@@ -52,11 +59,11 @@ export default function BranchSwitcher() {
     // Sync with URL for server-side pages (like Dashboard)
     const params = new URLSearchParams(searchParams.toString());
     if (id) {
-      params.set("branch_id", id);
+      params.set('branch_id', id);
     } else {
-      params.delete("branch_id");
+      params.delete('branch_id');
     }
-    
+
     router.push(`${pathname}?${params.toString()}`);
   };
 
@@ -65,7 +72,7 @@ export default function BranchSwitcher() {
     return (
       <div className="flex items-center gap-2 px-3 py-2 bg-slate-100 border border-slate-200 rounded-lg text-sm">
         <Lock className="w-3.5 h-3.5 text-slate-400" />
-        <span className="font-medium text-slate-500">{selected?.name || "My Branch"}</span>
+        <span className="font-medium text-slate-500">{selected?.name || 'My Branch'}</span>
       </div>
     );
   }
@@ -79,20 +86,26 @@ export default function BranchSwitcher() {
       >
         <Building2 className="w-4 h-4 text-violet-500" />
         <span className="font-medium text-slate-700 max-w-[150px] truncate">{label}</span>
-        <ChevronDown className={`w-3.5 h-3.5 text-slate-400 transition-transform ${open ? "rotate-180" : ""}`} />
+        <ChevronDown
+          className={`w-3.5 h-3.5 text-slate-400 transition-transform ${open ? 'rotate-180' : ''}`}
+        />
       </button>
 
       {open && canSwitch && (
         <div className="absolute right-0 mt-2 w-56 bg-white border border-slate-200 rounded-xl shadow-xl z-50 py-1 animate-in fade-in slide-in-from-top-2 duration-150">
           <div className="px-3 py-2 border-b border-slate-100">
-            <p className="text-[10px] font-bold uppercase text-slate-400 tracking-wider">Switch Branch</p>
+            <p className="text-[10px] font-bold uppercase text-slate-400 tracking-wider">
+              Switch Branch
+            </p>
           </div>
 
           {/* All Branches Option */}
           <button
             onClick={() => handleBranchChange(null)}
             className={`w-full flex items-center gap-2.5 px-3 py-2.5 text-sm transition-colors ${
-              selectedBranchId === null ? "bg-violet-50 text-violet-700" : "text-slate-700 hover:bg-slate-50"
+              selectedBranchId === null
+                ? 'bg-violet-50 text-violet-700'
+                : 'text-slate-700 hover:bg-slate-50'
             }`}
           >
             <div className="w-7 h-7 rounded-lg bg-slate-100 flex items-center justify-center shrink-0">
@@ -110,7 +123,9 @@ export default function BranchSwitcher() {
               key={branch.id}
               onClick={() => handleBranchChange(branch.id)}
               className={`w-full flex items-center gap-2.5 px-3 py-2.5 text-sm transition-colors ${
-                selectedBranchId === branch.id ? "bg-violet-50 text-violet-700" : "text-slate-700 hover:bg-slate-50"
+                selectedBranchId === branch.id
+                  ? 'bg-violet-50 text-violet-700'
+                  : 'text-slate-700 hover:bg-slate-50'
               }`}
             >
               <div className="w-7 h-7 rounded-lg bg-slate-100 flex items-center justify-center shrink-0">
@@ -119,7 +134,9 @@ export default function BranchSwitcher() {
               <div className="flex-1 text-left">
                 <span className="font-medium">{branch.name}</span>
                 {branch.is_main && (
-                  <span className="ml-1.5 text-[9px] font-bold uppercase text-violet-500 bg-violet-50 px-1 py-0.5 rounded">Main</span>
+                  <span className="ml-1.5 text-[9px] font-bold uppercase text-violet-500 bg-violet-50 px-1 py-0.5 rounded">
+                    Main
+                  </span>
                 )}
               </div>
               {selectedBranchId === branch.id && <Check className="w-4 h-4 text-violet-500" />}

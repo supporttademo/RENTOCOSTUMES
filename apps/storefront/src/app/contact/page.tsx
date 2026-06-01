@@ -173,7 +173,7 @@ export default function ContactPage() {
                           {store.email}
                         </a>
                       ) : (
-                        <p className="text-body text-sm">hello@mazhavilcostumes.com</p>
+                        <p className="text-body text-sm">hello@rentocostumes.com</p>
                       )}
                     </div>
                   </div>

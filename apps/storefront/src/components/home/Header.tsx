@@ -60,8 +60,8 @@ export default function Header({ store, categories }: HeaderProps) {
   // Only collapse categories to badges on desktop when scrolled
   const compactCategories = isScrolled && isDesktop;
 
-  const storeName = store?.name || "Mazhavil Costumes";
-  const logoUrl = store?.logo_url || "/logo_mazhavil.jpeg";
+  const storeName = store?.name || "RENTOCOSTUMES";
+  const logoUrl = store?.logo_url || "/logo.svg";
 
   const displayCategories = categories || [];
 
@@ -82,19 +82,27 @@ export default function Header({ store, categories }: HeaderProps) {
           <div className="flex items-center justify-between gap-4 sm:gap-10">
             {/* Logo */}
             <Link href="/" className="flex items-center gap-3 group shrink-0 transition-all duration-500">
-              <div className="relative overflow-hidden rounded-full">
-                <Image
-                  src={logoUrl}
-                  alt={storeName}
-                  width={140}
-                  height={40}
-                  className={cn(
-                    "w-auto object-contain transition-all duration-500",
-                    isScrolled ? "h-7 sm:h-8" : "h-9 sm:h-10 md:h-12"
-                  )}
-                />
-              </div>
-              <span className="hidden sm:inline text-sm sm:text-base md:text-xl font-serif tracking-[0.2em] uppercase text-rosegold transition-colors leading-none">
+              {store?.logo_url && store.logo_url !== "/logo_mazhavil.jpeg" && store.logo_url !== "/logo.svg" ? (
+                <div className="relative overflow-hidden rounded-full">
+                  <Image
+                    src={logoUrl}
+                    alt={storeName}
+                    width={140}
+                    height={40}
+                    className={cn(
+                      "w-auto object-contain transition-all duration-500",
+                      isScrolled ? "h-7 sm:h-8" : "h-9 sm:h-10 md:h-12"
+                    )}
+                  />
+                </div>
+              ) : (
+                <div className="w-12 h-12 bg-rosegold/5 rounded-xl border border-rosegold/20 flex items-center justify-center transition-all group-hover:bg-rosegold/10 group-hover:scale-105 shadow-sm">
+                  <span className="text-base font-serif font-black italic tracking-wide text-rosegold select-none">
+                    ROC
+                  </span>
+                </div>
+              )}
+              <span className="hidden sm:inline text-sm sm:text-base md:text-xl font-serif tracking-[0.2em] uppercase text-rosegold transition-colors leading-none font-bold">
                 {storeName}
               </span>
             </Link>

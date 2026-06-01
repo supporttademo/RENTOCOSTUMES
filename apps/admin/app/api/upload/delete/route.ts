@@ -8,7 +8,7 @@
  * @module app/api/upload/delete/route
  */
 
-import { deleteFileFromR2 } from "@/lib/r2";
+import { deleteFileFromSupabase } from "@/lib/supabase-storage";
 import { apiSuccess, apiBadRequest, apiInternalError } from "@/lib/apiResponse";
 
 export async function POST(request: Request) {
@@ -19,19 +19,21 @@ export async function POST(request: Request) {
       return apiBadRequest("No URL provided");
     }
 
-    // Extract R2 object key from the public URL
-    // URL format: https://pub-xxx.r2.dev/products/12345-image.webp
-    const publicUrl = process.env.R2_PUBLIC_URL;
-    if (!publicUrl) {
-      return apiInternalError("R2 not configured");
+    // Extract storage object key from the public Supabase storage URL
+    // URL format: https://[id].supabase.co/storage/v1/object/public/[bucket]/[key]
+    const bucketName = process.env.NEXT_PUBLIC_SUPABASE_STORAGE_BUCKET || "rentocostumes";
+    const urlMarker = `/storage/v1/object/public/${bucketName}/`;
+
+    if (!url.includes(urlMarker)) {
+      return apiBadRequest("Invalid Supabase storage URL");
     }
 
-    const key = url.replace(`${publicUrl}/`, "");
-    if (!key || key === url) {
-      return apiBadRequest("Invalid R2 URL");
+    const key = url.split(urlMarker)[1];
+    if (!key) {
+      return apiBadRequest("Failed to extract storage key");
     }
 
-    await deleteFileFromR2(key);
+    await deleteFileFromSupabase(key);
 
     return apiSuccess({ key }, { message: 'File deleted successfully' });
   } catch (error) {

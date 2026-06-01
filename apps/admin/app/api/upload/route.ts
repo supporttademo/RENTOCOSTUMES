@@ -15,7 +15,7 @@
  * @module app/api/upload/route
  */
 
-import { uploadFileToR2, generateR2Key } from "@/lib/r2";
+import { uploadFileToSupabase, generateStorageKey } from "@/lib/supabase-storage";
 import { apiSuccess, apiBadRequest, apiInternalError } from "@/lib/apiResponse";
 // @ts-ignore - no types available for heic-convert
 import convert from "heic-convert";
@@ -55,7 +55,7 @@ export async function POST(request: Request) {
       return apiBadRequest("No file provided");
     }
 
-    // Convert browser File to Node.js Buffer for S3 upload
+    // Convert browser File to Node.js Buffer for upload
     const bytes = await file.arrayBuffer();
     let buffer = Buffer.from(bytes);
     let fileName = file.name;
@@ -74,11 +74,11 @@ export async function POST(request: Request) {
       }
     }
 
-    // Generate a unique, sanitized S3 key to prevent collisions
-    const key = generateR2Key(folder, fileName);
+    // Generate a unique, sanitized storage key to prevent collisions
+    const key = generateStorageKey(folder, fileName);
 
-    // Upload to R2 and get the public URL
-    const url = await uploadFileToR2(buffer, key, mimeType);
+    // Upload to Supabase Storage and get the public URL
+    const url = await uploadFileToSupabase(buffer, key, mimeType);
 
     return apiSuccess({ url, key }, { message: 'File uploaded successfully' });
   } catch (error) {
