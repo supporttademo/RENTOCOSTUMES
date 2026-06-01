@@ -1,0 +1,146 @@
+/**
+ * Orders REST API — Collection Endpoint
+ *
+ * Routes:
+ *   GET    /api/orders   Fetch all orders (paginated)
+ *   POST   /api/orders   Create a new order
+ *
+ * GET Query Params:
+ *   - customer_id: string (optional)
+ *   - branch_id: string (optional)
+ *   - status: string (optional)
+ *   - query: string (optional)
+ *   - limit: number (optional)
+ *   - page: number (optional)
+ *
+ * POST body (JSON): CreateOrderDTO
+ *
+ * @module app/api/orders/route
+ */
+
+import { NextRequest } from "next/server";
+import { orderService } from "@/services/orderService";
+import { paymentService } from "@/services/paymentService";
+import { apiGuard } from "@/lib/apiGuard";
+import { getAuthUser } from "@/lib/auth";
+import { CreateOrderSchema } from "@/domain";
+import { PaymentType } from "@/domain/types/payment";
+import { apiSuccess, apiRepositoryError, apiBadRequest, apiInternalError } from "@/lib/apiResponse";
+
+/** GET /api/orders — fetch all orders */
+export async function GET(request: NextRequest) {
+  try {
+    const guard = await apiGuard(request, 'orders');
+    if (guard.error) return guard.error;
+
+    const searchParams = request.nextUrl.searchParams;
+    const page = searchParams.get('page') ? parseInt(searchParams.get('page')!) : 1;
+    const limit = searchParams.get('limit') ? parseInt(searchParams.get('limit')!) : 25;
+    
+    const statusParams = searchParams.getAll('status');
+    const status = statusParams.length > 0 ? (statusParams.length === 1 ? statusParams[0] : statusParams) : undefined;
+
+    const paymentStatusParams = searchParams.getAll('payment_status');
+    const payment_status = paymentStatusParams.length > 0 ? (paymentStatusParams.length === 1 ? paymentStatusParams[0] : paymentStatusParams) : undefined;
+
+    const excludeStatusParams = searchParams.getAll('exclude_status');
+    const exclude_status = excludeStatusParams.length > 0 ? (excludeStatusParams.length === 1 ? excludeStatusParams[0] : excludeStatusParams) : undefined;
+
+    const params = {
+      customer_id: searchParams.get('customer_id') || undefined,
+      branch_id: searchParams.get('branch_id') || undefined,
+      status: status as any,
+      exclude_status: exclude_status as any,
+      payment_status: payment_status as any,
+      product_id: searchParams.get('product_id') || undefined,
+      query: searchParams.get('query') || undefined,
+      date_filter: searchParams.get('date_filter') as any || undefined,
+      date_field: searchParams.get('date_field') as any || undefined,
+      date_from: searchParams.get('date_from') || undefined,
+      date_to: searchParams.get('date_to') || undefined,
+      has_damage_charges: searchParams.get('has_damage_charges') === 'true' || undefined,
+      has_stock_conflict: searchParams.get('has_stock_conflict') === 'true' || undefined,
+      sort_by: searchParams.get('sort_by') as any || undefined,
+      sort_order: (searchParams.get('sort_order') as 'asc' | 'desc') || undefined,
+      limit,
+      offset: (page - 1) * limit,
+    };
+
+    const [result, actionNeededResult, conflictResult] = await Promise.all([
+      orderService.getAllOrders(params),
+      orderService.countActionNeededOrders(params.branch_id),
+      orderService.countConflictOrders(params.branch_id),
+    ]);
+
+    if (!result.success || !result.data) {
+      return apiRepositoryError(result.error, 'Failed to fetch orders');
+    }
+
+    const { orders, total, total_pages, has_next, has_prev } = result.data;
+
+    return apiSuccess(orders, {
+      meta: {
+        total,
+        totalPages: total_pages,
+        page,
+        limit,
+        hasNext: has_next,
+        hasPrev: has_prev,
+        actionNeededCount: actionNeededResult.data || 0,
+        conflictCount: conflictResult.data || 0,
+      },
+    });
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err);
+    return apiInternalError(message);
+  }
+}
+
+/** POST /api/orders — create a new order */
+export async function POST(request: NextRequest) {
+  try {
+    const guard = await apiGuard(request, 'orders');
+    if (guard.error) return guard.error;
+
+    const authUser = await getAuthUser(request);
+    orderService.setUserContext(authUser?.staff_id || null, authUser?.branch_id || null);
+
+    const body = await request.json();
+    
+    // Validate request body
+    const validatedData = CreateOrderSchema.safeParse(body);
+    if (!validatedData.success) {
+      return apiBadRequest('Validation failed', validatedData.error.format());
+    }
+
+    const result = await orderService.createOrder(validatedData.data);
+    
+    if (!result.success) {
+      // Special handling: priority cleaning required but not confirmed
+      if ((result.error as any)?.code === 'PRIORITY_CLEANING_REQUIRED') {
+        return Response.json(
+          { error: result.error?.message, code: 'PRIORITY_CLEANING_REQUIRED', details: (result.error as any)?.details || [] },
+          { status: 409 }
+        );
+      }
+      return apiRepositoryError(result.error, 'Failed to create order');
+    }
+
+    // Create advance payment record if advance was collected
+    if (result.data && validatedData.data.advance_collected && (validatedData.data.advance_amount || 0) > 0) {
+      paymentService.setUserContext(authUser?.staff_id || null, authUser?.branch_id || null);
+      await paymentService.createPayment({
+        order_id: result.data.id,
+        payment_type: PaymentType.ADVANCE,
+        amount: validatedData.data.advance_amount!,
+        payment_mode: (validatedData.data.advance_payment_method as any) || 'cash',
+        notes: 'Advance payment collected at order creation',
+      });
+    }
+
+    return apiSuccess(result.data, { status: 201, message: 'Order created successfully' });
+  } catch (err) {
+    const message = err instanceof Error ? err.message : String(err);
+    return apiInternalError(message);
+  }
+}
